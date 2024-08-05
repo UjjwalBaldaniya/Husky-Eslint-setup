@@ -1,0 +1,147 @@
+* How to Integrate prettier, eslint, lint staged and huskey configration in react js project 
+
+1. Install all the require packeges 
+- npm install --save-dev eslint prettier eslint-config-prettier eslint-plugin-prettier husky lint-staged
+- please insure all the package is install in dev dependency ( use this command in install time --save-dev )
+
+2. Create .eslintrc.json file for creating rules which I apply in project
+- {
+  "env": {
+    "browser": true,
+    "es2021": true,
+    "node": true ,
+    "jest": true
+  },
+  "extends": [
+    "eslint:recommended",
+    "plugin:react/recommended",
+    "plugin:prettier/recommended"
+  ],
+  "parserOptions": {
+    "ecmaFeatures": {
+      "jsx": true
+    },
+    "ecmaVersion": 12,
+    "sourceType": "module"
+  },
+  "plugins": ["react", "prettier", "simple-import-sort"],
+  "rules": {
+    "prettier/prettier": [
+      "warn",
+      {
+        "endOfLine": "auto" 
+      }
+    ],
+    // React-specific rules
+    "react/prop-types": "off", // Disable prop-types as we use TypeScript for type checking
+    "react/react-in-jsx-scope": "off", // Not needed with React 17+
+    "react/jsx-uses-react": "off", // Not needed with React 17+
+    "react/jsx-uses-vars": "error", // Prevent React components being marked as unused
+
+    // General best practices
+    "no-console": "error",
+    "eqeqeq": ["error", "always"], 
+
+    // Code quality rules
+    "no-unused-vars": ["error", { "argsIgnorePattern": "^_" }], 
+    "no-debugger": "warn", 
+    "no-multi-spaces": "error",
+    "no-trailing-spaces": "error",
+    "prefer-const": "error",
+
+    // Import sorting
+    "simple-import-sort/imports": "error",
+    "simple-import-sort/exports": "error"
+  },
+  "settings": {
+    "react": {
+      "version": "detect"
+    }
+  }
+}
+
+3. Create .prettierrc file for add configration
+- {
+  "printWidth": 80,
+  "tabWidth": 2,
+  "useTabs": false,
+  "semi": true,
+  "singleQuote": false,
+  "trailingComma": "es5",
+  "bracketSpacing": true,
+  "jsxBracketSameLine": false,
+  "endOfLine": "auto" 
+}
+
+4. Add lint-staged command in package.json file
+- "lint-staged": {
+  "*.{js,jsx}": [
+    "eslint --fix",
+    "prettier --write"
+  ]
+}
+
+5. initialize husk
+- npx husky-init
+- After run this command, We have showing husky folder create in our project in top
+- Inside this folder have pre-commit file, so add this code inside this file 
+- #!/bin/sh
+. "$(dirname "$0")/_/husky.sh"
+
+npx lint-staged
+- This command is use for preventing code which are not follow the rules
+
+6. Add eslint configration in package.json > script file 
+- "scripts": {
+   "lint": "eslint \"src/**/*.{js,jsx}\"",
+   "lint:fix": "eslint \"src/**/*.{js,jsx}\" --fix",
+   "format": "prettier --write \"src/**/*.{js,jsx}\""
+}
+
+7. For linting ==> npm run lint
+8. Fix Linting Errors ==> npm run lint:fix
+9. Format Code ==> npm run format
+
+10. Create .prettierignore file
+- # Node modules directory
+node_modules/
+
+# Build output directory
+build/
+dist/
+
+# Log files
+*.log
+
+# IDE/editor directories
+.vscode/
+.idea/
+
+# Miscellaneous
+*.min.js
+*.bundle.js
+*.map
+*.d.ts  # TypeScript declaration files
+*.js.snap  # Jest snapshot files
+
+11. Create .eslintignore file
+- # Node modules directory
+node_modules/
+
+# Build output directory
+build/
+dist/
+
+# Log files
+*.log
+
+# IDE/editor directories
+.vscode/
+.idea/
+
+# Miscellaneous
+*.min.js
+*.bundle.js
+*.map
+*.d.ts  # TypeScript declaration files
+*.js.snap  # Jest snapshot files
